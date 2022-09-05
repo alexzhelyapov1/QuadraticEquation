@@ -13,7 +13,7 @@
 //!  @copyright AlexZ (Idea of Ded;))
 //----------------------------------------------------------------
 
-int SolveQuadratic (double a, double b, double c, double* root1, double* root2) {
+enum number_of_roots SolveQuadratic (double a, double b, double c, double* root1, double* root2) {
 
     assert (!isnan (a));
     assert (!isnan (b));
@@ -69,7 +69,7 @@ bool IsZero (double value) {
 //!  @note Decision must exist!
 //----------------------------------------------------------------
 
-int SolveLinear (double b, double c, double* root1, double* root2){
+enum number_of_roots SolveLinear (double b, double c, double* root1, double* root2){
 
     assert (!isnan (b));
     assert (!isnan (c));
@@ -92,7 +92,7 @@ int SolveLinear (double b, double c, double* root1, double* root2){
 //!  @param  [in]   root2 - second root of equation
 //----------------------------------------------------------------
 
-void OutputAnswer (Number_of_roots nRoots, double root1, double root2) {
+void PrintAnswer (number_of_roots nRoots, double root1, double root2) {
     assert (nRoots <= TWO_ROOTS && nRoots >= NO_ROOTS);
 
     switch (nRoots){
@@ -120,7 +120,7 @@ void OutputAnswer (Number_of_roots nRoots, double root1, double root2) {
 //!  @note You have only 5 attempts to enter coefficients! \n Or you will go to sleep (maybe this isn't a threat:))
 //----------------------------------------------------------------
 
-int InputCoefficient (double* a, double* b, double* c) {
+int InputCoefficients (double* a, double* b, double* c) {
     assert (a != 0);
     assert (b != 0);
     assert (c != 0);
@@ -141,81 +141,4 @@ int InputCoefficient (double* a, double* b, double* c) {
     printf ("You're tired, go to sleep!!!");
     numberOfRead = 0; //nothing read
     return numberOfRead;
-}
-
-
-//----------------------------------------------------------------
-//!  Testing program of the function "SolveQuadratic()"
-//!  Tests already set!
-//   ^~~~~~~~~~~~~~~~~ TODO: What does it mean?
-//!  @copyright AlexZ
-//----------------------------------------------------------------
-
-
-#ifdef DEBUG
-
-int TestSolveQuadratic () {
-
-    // TODO: What is the reason to define test_values structure locally?
-    //       I think making it top-level in appropriate header (e.g. equation-solver-test.h)
-    //       would add a lot of possibilities for splitting this in more functions.  
-
-    //! Structure to keep tests for function TestSolveQuadratic()
-    struct test_values {
-
-        double a;           //!<  Coefficient of equation for x^2
-        double b;           //!<  Coefficient of equation for x
-        double c;           //!<  Coefficient of equation for free member
-        int nRoots;         //!<  Number of roots
-        double root1;       //!<  First solution of equation
-        double root2;       //!<  Second solution of equation
-    };
-
-    const int NTESTS = 4;
-    test_values arrayOfTests[NTESTS] =  {{1,  1, 1, NO_ROOTS,       0, 0},
-                                        {0,  0, 0, INFINITY_ROOTS, 0, 0},
-                                        {1,  2, 1, ONE_ROOT,      -1, 0},
-                                        {1, -5, 6, TWO_ROOTS,      3, 2}};
-
-    double a = NAN, b = NAN, c = NAN;
-    double root1 = NAN, root2 = NAN;
-
-    printf ("\n-------------------------------------\nTests are going!\n");
-    for (int numberOfTest = 0; numberOfTest < NTESTS; numberOfTest++) {
-
-        a = arrayOfTests[numberOfTest].a;
-        b = arrayOfTests[numberOfTest].b;
-        c = arrayOfTests[numberOfTest].c;
-        int nRoots = SolveQuadratic (a, b, c, &root1, &root2);
-
-        if (nRoots != arrayOfTests[numberOfTest].nRoots) {
-            PrintErrOfTest (numberOfTest);
-        }
-        else if (nRoots != INFINITY_ROOTS && nRoots != NO_ROOTS) {
-            if (!IsEqual(root1, arrayOfTests[numberOfTest].root1)) {
-                PrintErrOfTest (numberOfTest);
-            }
-
-            else if (nRoots != ONE_ROOT) {
-                if (!IsEqual(root2, arrayOfTests[numberOfTest].root2)) {
-                    PrintErrOfTest (numberOfTest);
-                }
-            }
-        }
-        a = NAN; b = NAN; c = NAN; root1 = NAN; root2 = NAN;
-    }
-    printf ("End of Tests!\n-------------------------------------\n\n");
-    return OK;
-}
-
-#endif
-
-
-//----------------------------------------------------------------
-//!  Print "Error!" and number of test in case of failed
-//!  @param [in] numberOfTest - coefficient
-//----------------------------------------------------------------
-
-void PrintErrOfTest (int numberOfTest) {
-    printf ("Error Test %d!\n", numberOfTest + 1);
 }
