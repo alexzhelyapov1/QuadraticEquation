@@ -29,29 +29,27 @@ enum number_of_roots SolveQuadratic (double a, double b, double c, double* root1
     if (discriminant < 0)
         return NO_ROOTS;
     if (IsZero (discriminant)) {
-        *root1 = SolveLinear(2*a, b, root1, root2);
-        printf ("%g*x^2 + %g*x + %g\nRoot 1 = %g, root 2 = %g\n", a, b, c, *root1, *root2);
-        return ONE_ROOT;
+        return SolveLinear(2*a, b, root1, root2);
     }
     *root1 = (-b + sqrt (discriminant)) / (2*a);
     *root2 = (-b - sqrt (discriminant)) / (2*a);
     return TWO_ROOTS;
-    // printf ("%g*x^2 + %g*x + %g\nRoot 1 = %g, root 2 = %g\n", a, b, c, *root1, *root2);
 }
 
 //----------------------------------------------------------------
 //!  Compare two double numbers
 //!  @param [in] value - first number
-//!  @param [in] compareValue - second number
+//!  @param [in] compare_value - second number
 //!  @return Is this two numbers equal?
 //----------------------------------------------------------------
 
-bool IsEqual (double value, double compareValue) {
+bool IsEqual (double value, double compare_value) {
+    // printf ("\nHELOOOOO %lg %lg\n", value, compare_value);
 
     assert (!isnan (value));
-    assert (!isnan (compareValue));
+    assert (!isnan (compare_value));
 
-    return (fabs (value - compareValue) < EPSILON);
+    return (fabs (value - compare_value) < EPSILON);
 }
 
 bool IsZero (double value) {
@@ -69,18 +67,18 @@ bool IsZero (double value) {
 //!  @note Decision must exist!
 //----------------------------------------------------------------
 
-enum number_of_roots SolveLinear (double b, double c, double* root1, double* root2){
+enum number_of_roots SolveLinear (double a, double b, double* root1, double* root2){
 
+    assert (!isnan (a));
     assert (!isnan (b));
-    assert (!isnan (c));
 
-    if (IsZero (b)) {
-        if (IsZero (c)) {
+    if (IsZero (a)) {
+        if (IsZero (b)) {
             return INFINITY_ROOTS;
         }
         return NO_ROOTS;
     }
-    *root1 = -c/b;
+    *root1 = -b/a;
     return ONE_ROOT;
 }
 
@@ -121,24 +119,23 @@ void PrintAnswer (number_of_roots nRoots, double root1, double root2) {
 //----------------------------------------------------------------
 
 int InputCoefficients (double* a, double* b, double* c) {
-    assert (a != 0);
-    assert (b != 0);
-    assert (c != 0);
+    assert (a);
+    assert (b);
+    assert (c);
 
     printf ("# Please enter coefficient of equation (a, b, c)\n");
-    int numberOfRead = scanf ("%lg %lg %lg", a, b, c);
+    int number_of_read = scanf ("%lg %lg %lg", a, b, c);
 
     int countOfTry = 1;
-    if (numberOfRead != 3) {
+    if (number_of_read != 3) {
         while (countOfTry < 5) {
-            fflush(stdin);
             printf ("Wrong coefficient!\nTry again!\n");
-            if ((numberOfRead = scanf ("%lg %lg %lg", a, b, c)) == 3)
-                return numberOfRead;
+            if ((number_of_read = scanf ("%lg %lg %lg", a, b, c)) == 3)
+                return number_of_read;
             countOfTry++;
         }
+        printf ("You're tired, go to sleep!!!");
+        number_of_read = 0; //nothing read
     }
-    printf ("You're tired, go to sleep!!!");
-    numberOfRead = 0; //nothing read
-    return numberOfRead;
+    return number_of_read;
 }
